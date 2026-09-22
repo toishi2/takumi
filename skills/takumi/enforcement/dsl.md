@@ -30,7 +30,7 @@ literal := 英数・ハイフン・アンダースコアの連続 (quote なし)
 | `plan` | plan 全体 | `plan.tasks != null` |
 | `surface` | `.takumi/specs/{surface}.md` frontmatter | `surface.tags.UI in [human-UI, machine+human]` |
 | `diff` | 当該 Wave の変更 | `diff.changed_paths != null` |
-| `loop` / `autonomy` / `requirements` | `.takumi/state.json` / `project.yaml` | `loop == true` / `autonomy.level != manual` / `requirements.source == toishi` |
+| `loop` / `autonomy` | `.takumi/state.json` / `project.yaml` | `loop == true` / `autonomy.level != manual` |
 
 ## 評価規則 (決定的)
 

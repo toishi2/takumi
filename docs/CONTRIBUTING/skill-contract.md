@@ -120,12 +120,11 @@ skill 群は **全文を全部読まない** 設計。個別 md は「独立完�
 
 ---
 
-## Gate 経由の契約 (backlog / toishi / design)
+## Gate 経由の契約 (backlog / design)
 
 新しい hook / fetch point / 予防層を足す時、中央 Gate を迂回しない (silent 違反防止):
 
 - **backlog hook**: 全 entrypoint (auto-detect / bootstrap / migration / sync / 発話 / 提案) は `BacklogGate.resolveMode()` を必ず通す。`mode == external` で全 hook no-op。提案発火は `OfferPolicy.shouldOffer(trigger)` 経由のみ。詳細 `backlog-mode.md` (+ `backlog/*.md`)。
-- **外部要件 source (toishi)**: 全 fetch point は `ToishiGate.shouldFetch(stage)` 経由必須、`never / local / unset` で no-op (backlog OfferPolicy と対称)。詳細 `toishi-integration.md`。
 - **design 予防層**: UI 崩れ予防は二層 — `design/layout-primitives.md` (構成的予防の一次層) と `design/l7-invariant.md` (検出の保険網)。新しい崩れ対策は「検出を足す」前に「primitive で書けなくする」を先に検討。
 
 これらの Gate を迂回した hook は contract 違反。新規追加 PR では Gate 経由を必ず確認する。

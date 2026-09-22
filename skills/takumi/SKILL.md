@@ -41,7 +41,6 @@ license: MIT
 | **dispatch / 実行 (executor runtime)** | SKILL.md + `dispatch/executor.md` + `dispatch/loop-invariant.md` (毎 Wave 再アンカーする停止点契約、L2) + `dispatch/routing-mode.md` (軍師呼出時 `dispatch/gunshi-invocation.md`、並列実行時 `dispatch/wave-dag.md`、無人実行/gate 裁定時 `dispatch/autonomy.md`、聞く/察す/止まるの較正は `qbc.md`) | それ以外は不要 |
 | **Sprint / Continuous mode (3-phase Cycle)** | SKILL.md + `sprint/sprint-mode.md` + `sprint/3lane-discovery.md` (発見多発時) + `sprint/self-multiplying.md` (単一 backlog 対比) + `sprint/wave-formula.md` (Full Spec plan 起草時) | normal mode 系、verify/, probe/, design/ |
 | **backlog 起票/管理** | SKILL.md (Step 0e) + `backlog-mode.md` | probe/, sweep/, design/, verify/ |
-| **外部要件 source 連携 (まれ、opt-in)** | SKILL.md + `toishi-integration.md` (+ `dispatch/autonomy.md` G1.5 行) | probe/, sweep/, design/, verify/ |
 | 状態確認 / 再開 / override | SKILL.md + `natural-language.md` + `.takumi/state.json` | それ以外は不要 |
 
 **ファイルサイズ方針** (3 予算): per-file md ≤349 行 (350 超は分割) / 常時ロード core (`SKILL.md`) **≤320 行暫定上限・≤280 目標** / per-task footprint ≤1,200 行/task。詳細・現状超過は `.takumi/drafts/per-task-footprint.md`。実行時は「**テスト追加なら verify 系だけ、リファクタなら strict-refactoring だけ**」と選択的に読み 1 task の context を最小化する。
@@ -137,8 +136,6 @@ resolver は `manual_override` 最優先 → `mode_select(runtime_state)` → ce
 - surface の `UI有無 ∈ {human-UI, machine+human}` → design mode + `design_profile_ref` (ui/mixed 相当)、`{none, API-only}` のみなら UI 枝 skip (backend 相当)
 - どの導出枝 / consistency 対 / gate / 哲学を有効化するかは `surface-archetypes.md` の spine profile マッピングで決定
 
-外部要件 source (例: toishi の MCP server) を使う場合は `toishi-integration.md` 参照 (auto-detect、未検出時は完全 silent、利用者は数%想定)。
-
 ### 0a-2. project 言語 × L4 Mutation tier 判定
 
 `package.json` / `Cargo.toml` / `go.mod` / `pyproject.toml` / `*.csproj` / `pom.xml` / `build.sbt` から project 言語を検出し L4 Mutation tier を決定。tier 表 (JS/TS/Java/Kotlin/C#/Rust/Scala = **primary** / Python/Go = **advisory** / その他 = **skip**)、判定根拠 (mutation operator 覆盖範囲ベース、ツール star 数や成熟度ではない)、各言語のツール詳細 (Stryker-JS / PIT / Stryker.NET / cargo-mutants / Stryker4s / mutmut / gremlins) は **`verify/mutation.md`「言語別 tier 表」** 参照。
@@ -178,8 +175,6 @@ UI を含む surface は、**plan 本体より先に** design mode で IA / styl
 提案発火は `OfferPolicy.shouldOffer(trigger)` 経由のみ (5 タイミング: probe triage 完了 / sweep 完了 / discovered ≥3 / 「BL 起票」発話 / Sprint bl_refs)、session-scoped `backlog_offer_shown` + project-scoped `deferred_until` で 1 セッション最大 1 回、`external` は 0 回。`mode == enabled` 時のみ bootstrap (`.takumi/backlog/{open,doing,done}/` + `.gitignore` 例外 + README + `bootstrapped_at` 更新)、詳細は `step0-bootstrap.md` の「project.yaml.backlog セクション」節。
 
 frontmatter / 状態遷移表 (4 状態 × 5 イベント) / external silent マトリクス / 自動判定 3 signal / 移行 / AI 移動 + sync check の詳細は **`backlog-mode.md`** (+ `backlog/*.md` sub-spec 7 本) を参照。
-
-外部要件 source (opt-in、`requirements.source == toishi` 時のみ) の全 fetch point は **`ToishiGate.shouldFetch(stage)` 経由必須** (`mode == never / local / unset` で全 stage no-op、backlog OfferPolicy と対称)。詳細 `toishi-integration.md`、bash は `step0-bootstrap.md`。
 
 ---
 
@@ -252,7 +247,6 @@ frontmatter / 状態遷移表 (4 状態 × 5 イベント) / external silent マ
 
 - probe mode / sweep mode 経由の場合 → 確認を求めず即 executor 起動 (`executor.md` 参照)
 - 直接 `/takumi` で normal mode に入った場合 → **計画承認 (G1) は `autonomy.level` に従う** (`autonomy.md`): `autonomous` (default) → 軍師 plan-review が blocking なし AND critical AC なしなら**無人 proceed** (critical 含む or 軍師 degraded は計画提示して人間承認) / `gated` → 計画提示「進めて良いですか?」→ yes で起動 / `manual` → 全 gate で人間
-- `project.yaml.requirements.source == toishi` の project では Wave 1 着手前に **G1.5 (外部 scope 承認 check)** も発動 (`autonomy.md` G1.5 行 + `toishi-integration.md` 参照、他 source は no-op)
 
 ### in-conversation plan の許容条件 (plan ファイル省略の例外)
 

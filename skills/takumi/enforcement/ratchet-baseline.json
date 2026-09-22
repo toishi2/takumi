@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-02T04:48:51.805Z",
+  "generated_at": "2026-09-22T14:09:33.171Z",
   "files": {
     ".takumi/plans/ddp-data-access-discipline.md": {
       "anchored_sections": 0,
@@ -54,8 +54,8 @@
       "total_sections": 16
     },
     "contract/data-access-protocol.md": {
-      "anchored_sections": 9,
-      "total_sections": 18
+      "anchored_sections": 12,
+      "total_sections": 22
     },
     "contract/domain-data-primitives.md": {
       "anchored_sections": 0,
@@ -86,7 +86,7 @@
       "total_sections": 12
     },
     "design/l7-invariant.md": {
-      "anchored_sections": 0,
+      "anchored_sections": 1,
       "total_sections": 14
     },
     "design/layout-primitives.md": {
@@ -139,7 +139,83 @@
     },
     "enforcement/README.md": {
       "anchored_sections": 0,
-      "total_sections": 15
+      "total_sections": 13
+    },
+    "enforcement/cards/auto-continue-stop-contract.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/codegen-exception-rule.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/context-protection-pause.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/decision-dossier-required.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/final-verification-step.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/gate-before-advance.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/loop-stop-predicate.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/mode-executor.md": {
+      "anchored_sections": 0,
+      "total_sections": 0
+    },
+    "enforcement/cards/opus-delegation-policy.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/parent-checkpoint-respawn.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/per-wave-junshi-gate.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/plan-contract-misimpl-oracle.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/stop-points-only.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/supervised-completion-loop.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/thin-orchestrator.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/three-mode-routing.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/two-layer-supply.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/wave-gate-pipeline.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
+    },
+    "enforcement/cards/wave-handoff-artifact.md": {
+      "anchored_sections": 0,
+      "total_sections": 5
     },
     "enforcement/dsl.md": {
       "anchored_sections": 0,
@@ -171,7 +247,7 @@
     },
     "integrations.md": {
       "anchored_sections": 0,
-      "total_sections": 10
+      "total_sections": 9
     },
     "junshi/README.md": {
       "anchored_sections": 0,
@@ -231,7 +307,7 @@
     },
     "qbc.md": {
       "anchored_sections": 0,
-      "total_sections": 7
+      "total_sections": 6
     },
     "sprint/3lane-discovery.md": {
       "anchored_sections": 0,
@@ -251,7 +327,7 @@
     },
     "step0-bootstrap.md": {
       "anchored_sections": 0,
-      "total_sections": 8
+      "total_sections": 7
     },
     "step0-env.md": {
       "anchored_sections": 0,
@@ -272,6 +348,14 @@
     "strict-refactoring/behavior-carrier.md": {
       "anchored_sections": 0,
       "total_sections": 29
+    },
+    "strict-refactoring/carrier-consistency.md": {
+      "anchored_sections": 2,
+      "total_sections": 11
+    },
+    "strict-refactoring/code-vitals.md": {
+      "anchored_sections": 0,
+      "total_sections": 9
     },
     "strict-refactoring/guide.md": {
       "anchored_sections": 0,
@@ -357,13 +441,9 @@
       "anchored_sections": 0,
       "total_sections": 15
     },
-    "toishi-integration.md": {
-      "anchored_sections": 0,
-      "total_sections": 31
-    },
     "verify/README.md": {
       "anchored_sections": 0,
-      "total_sections": 17
+      "total_sections": 18
     },
     "verify/ai-review.md": {
       "anchored_sections": 0,
@@ -381,9 +461,17 @@
       "anchored_sections": 0,
       "total_sections": 24
     },
+    "verify/cost-balance.md": {
+      "anchored_sections": 0,
+      "total_sections": 9
+    },
     "verify/differential.md": {
       "anchored_sections": 0,
       "total_sections": 15
+    },
+    "verify/double-management.md": {
+      "anchored_sections": 0,
+      "total_sections": 6
     },
     "verify/loop.md": {
       "anchored_sections": 0,
@@ -439,6 +527,6 @@
     }
   },
   "provisional_count": 20,
-  "total_rules": 59,
+  "total_rules": 61,
   "kernel_lines": 24
 }

@@ -101,7 +101,7 @@ tag を打って push する前に、以下を確認してください (release 
 skill 本体の挙動を把握しておくと、変更が "どの実行経路に効くか" を読み違えない。
 
 - **5-mode 規模分類** (Quick / Standard / Large / Continuous / Full Spec): タスク規模で plan の重さと subagent 起動が変わる。判定 algorithm は `SKILL.md` Step 1 + `sprint/sprint-mode.md`、規模式は `sprint/wave-formula.md`。
-- **autonomy ladder** (`autonomous` default / `gated` / `manual`): 計画→実行→完了の人間ゲートを軍師裁定に置換し、critical AC のみ人間に上げる。実質の停止点は G1 (計画承認) と G3 (escalation)、外部要件 source 連携時のみ G1.5 が加わる。詳細 `dispatch/autonomy.md`。「いつ人間に聞き / 察し / 止まるか」の判断は QBC (Question Budget Calibrator、`qbc.md`) が ambiguity × blast-radius × 不可逆性 の質問予算として統一し、intake / pre-Wave1 / runtime の 3 policy に分岐する (2 独立 pilot で rework ~35%→~8% を複製、未検証性明記の直接反映)。
+- **autonomy ladder** (`autonomous` default / `gated` / `manual`): 計画→実行→完了の人間ゲートを軍師裁定に置換し、critical AC のみ人間に上げる。実質の停止点は G1 (計画承認) と G3 (escalation)。詳細 `dispatch/autonomy.md`。「いつ人間に聞き / 察し / 止まるか」の判断は QBC (Question Budget Calibrator、`qbc.md`) が ambiguity × blast-radius × 不可逆性 の質問予算として統一し、intake / pre-Wave1 / runtime の 3 policy に分岐する (2 独立 pilot で rework ~35%→~8% を複製、未検証性明記の直接反映)。
 - **degraded autonomy**: 軍師 transport が unavailable な現状 (2026-05-24〜) は計画を人間提示に倒す fallback が効く (`dispatch/autonomy.md` §4 + `dispatch/routing-mode.md`)。
 
 skill ドキュメントを編集する時は、この実行経路への影響 (gate の増減 / 規模判定の変化) を commit message に明記する。

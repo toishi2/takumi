@@ -187,12 +187,12 @@ emit_fallback_event() {
 
 実体は user 環境の executor 内 shell 関数として持つ (skill リポジトリは markdown 仕様のみ提供)。executor が軍師呼出を抽象化していない場合は wrapper を作成して呼出全体を経由させる。
 
-### 3.9 `autonomy-decision.jsonl` (無人実行の監査証跡)
+### 3.9 `autonomy-decision.jsonl` (無人実行の監査証跡) <!-- ADVISORY: schema 説明。強制は registry の stop-legality-audit / wave-boundary-no-ask (source: dispatch/autonomy.md#3.5、mechanism: scripts/check-stop-legality.mjs) -->
 
 `profile-usage.jsonl` とは**別ファイル** `.takumi/telemetry/autonomy-decision.jsonl` (append-only)。無人実行の各 gate 判断を残し、後から「なぜ proceed したか」を追えるようにする (`autonomy.md` §6)。
 
 ```jsonc
-{"ts":"...","gate":"G1|G1.5|G2|G3|G6|G7","task_id":"T-042","risk":"critical|normal",
+{"ts":"...","gate":"G1|G2|G3|G6|G7","task_id":"T-042","risk":"critical|normal",
  "adjudicator":"gunshi|opus-max|human","verdict":"proceed|fix|defer|escalate",
  "confidence":"high|medium|low","runtime_promoted":false,
  "stop_kind":"dossier|blocked|bare|none","rationale":"..."}
@@ -201,7 +201,7 @@ emit_fallback_event() {
 - `adjudicator`: 実際に裁定した主体 (軍師 degraded 時は `opus-max`、critical は `human`)。
 - `runtime_promoted: true`: §2 二段検出の runtime second-pass で `risk: critical` に動的昇格した記録。
 - skip の fail-closed 記録もここに `verdict:"defer"` + `rationale:"skip after 3 retries"` で残す。
-- **`gate`**: 人間に手を止めて上げた時は **legal stop set `{G1, G1.5, G3, G6, G7}`** のみ (G2 は skip であって停止でない)。集合外 = 「無人なのに確認」accident。
+- **`gate`**: 人間に手を止めて上げた時は **legal stop set `{G1, G3, G6, G7}`** のみ (G2 は skip であって停止でない)。退役した `G1.5` (外部要件 source 承認 check、v3.0.0 で撤去) は **legacy input としてのみ受理**: `ts` が 2026-09-22 より前の記録に限り legal と読み、それ以降に `G1.5` が現れたら再混入として fail。新規に emit しない。集合外 = 「無人なのに確認」accident。
 - **`stop_kind`** (`autonomy.md` §3.5): 人間停止の質。`dossier` (検証済+推奨+confidence) / `blocked` (`blocked_reason` 添付) / `none` (停止せず proceed/defer) のいずれか。**`bare` = 裸の yes/no = 違反**。`scripts/check-stop-legality.mjs` (T1) が `bare` と illegal gate を deterministic に fail させる。
 
 ### 3.10 `plan_contract_miss` (post-hoc miss audit、claim cap)

@@ -136,13 +136,6 @@ rules:
     applies_when: always
     safety: none
     evidence_required: true
-  - id: toishi-g15-fail-closed
-    source: toishi-integration.md#G1.5
-    tier: 1
-    mechanism: scripts/check-toishi-snapshot.mjs      # 実装+fixture 4case 済 (dilution-100 W0.1): snapshot不在∧Wave進行痕跡 = fail
-    applies_when: "requirements.source == toishi"
-    safety: irreversible
-    evidence_required: true
 
   # --- T2 isolated-judgment (専用 reviewer subagent) ---
   - id: oracle-review-f

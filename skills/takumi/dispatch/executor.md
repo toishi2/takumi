@@ -171,7 +171,7 @@ wave gate は以下を**全て**通過する必要あり:
 > [!IMPORTANT]
 > **各 Wave 境界で、次アクション判断の直前に `loop-invariant.md` (≤30行) だけを再読込して再アンカーする** (`executor.md` 全体は再読込しない = L2 per-Wave re-injection、希釈対策)。その不変条件に従い、Wave/task 完了で **「続けますか?」と聞いてはならない**。`autonomy.level` (既定 `autonomous`、Step 0 で解決済) に従い、進捗 1 行報告で同一ターン内に次 Wave へ無人継続する。
 
-手を止めてよいのは **G1 計画承認 / G3・human floor (不可逆) / G6 context pause の 3 点のみ** (詳細は `loop-invariant.md` と `autonomy.md`)。各 Wave 末は「Wave N/M 完了 → 次へ」の非ブロッキング 1 行報告に留める (報告 ≠ 質問)。計画承認 (G1) / escalation (G3) の軍師裁定 protocol は **`autonomy.md`**。`project.yaml.requirements.source == toishi` の project では **Wave 1 着手前に G1.5 (外部 scope 承認 check)** も発動 (`autonomy.md` G1.5 行 + `toishi-integration.md`、他 source は no-op)。
+手を止めてよいのは **G1 計画承認 / G3・human floor (不可逆) / G6 context pause の 3 点のみ** (詳細は `loop-invariant.md` と `autonomy.md`)。各 Wave 末は「Wave N/M 完了 → 次へ」の非ブロッキング 1 行報告に留める (報告 ≠ 質問)。計画承認 (G1) / escalation (G3) の軍師裁定 protocol は **`autonomy.md`**。
 
 ### 7. per-Wave 巡視 hook (behavioral surface、pilot-gated) <!-- RULE: per-wave-junshi-gate T2:enforcement/reviewers/oracle.md -->
 <!-- scope:巡視 (junshi) 発火条件 / shall:harness+containment+spec 揃い+behavioral surface 時のみ起動 / not:欠落時に junshi を発火・修正を ungated 適用 / applicability:surface.behavioral==true / evidence:false -->

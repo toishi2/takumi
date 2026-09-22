@@ -165,8 +165,6 @@ optional: `tier0_change_approved_by` (string) — Tier-0 (TopContract I/T 項) �
   task_refs: []                # plan task 参照
 ```
 
-> 外部要件 source 利用時の `toishi_acceptance_check_id` (`toishi-integration.md`) と矛盾しない (併存可、optional)。
-
 ### バリデーション <!-- RULE: surface-frontmatter-valid T1:script -->
 <!-- scope:validation rules 1-5 (hard errors) / shall:必須 4 field 欠落/tags 軸欠落/surface 重複 を exit 1 で block / not:warning 扱い・スキップ / applicability:task.surface_ref != null / evidence:false -->
 

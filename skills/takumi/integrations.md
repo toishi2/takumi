@@ -84,17 +84,6 @@ task 作成時に `.takumi/telemetry/profile-usage.jsonl` に `task_created` eve
 | design_drift 粒度 | screen × primary_action 単位 |
 | loop min/max | min 15 分 / max 72 時間 |
 
-## toishi 連携 (`SKILL.md` Step 0 末尾 + `toishi-integration.md`)
-
-`project.yaml.requirements.source == toishi` 時のみ発動 (`local / never / unset` では全 no-op、`ToishiGate.shouldFetch(stage)` 中央化で構造的に silent 保証)。AC / design / plan の 3 つを **toishi snapshot 経由で連携** する:
-
-- **AC ↔ toishi**: AC frontmatter の `toishi_acceptance_check_id` / `toishi_snapshot_id: snap-{rfc3339}` で `.takumi/agreements/toishi-snapshot-*.json` の `verifications.acceptance_criteria_checks[]` を参照。adapter 内 LLM-assisted で Given/When/Then に分解
-- **design ↔ toishi**: `screenTransition + screenDetail` を design mode の screens 入力に流用 (design_profile_ref は推論可能ならそれを使う、`design/README.md` 連携)
-- **plan ↔ toishi (G1.5 gate)**: Wave 1 着手前に snapshot の item-level `approval_state` を確認、`pending_approval / draft` → 自動 defer、`rejected` → human 必須 (`autonomy.md` G1.5 行)
-- **snapshot 凍結**: Cycle 単位で immutable cache、PdM 編集による plan 不整合を防ぐ (詳細 `toishi-integration.md`)
-
-`mode == never / local / unset` では本連携は全て no-op (silent 違反防止、backlog の `external` 契約と同原則)。
-
 ## backlog 連携 (`SKILL.md` Step 0e + `backlog-mode.md`)
 
 `mode == enabled` 時、AC / plan / backlog の 3 つを **ID で双方向接続** する:

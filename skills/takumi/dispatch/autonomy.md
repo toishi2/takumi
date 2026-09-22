@@ -15,7 +15,6 @@
 | gate | 分類 | 挙動 |
 |---|---|---|
 | **G1 計画承認** | 軍師-adjudicated → critical なら human | 軍師 plan-review が blocking なし AND critical AC なし → 無人 proceed |
-| **G1.5 外部 scope 承認 check** (opt-in) | 状態駆動 → `rejected` なら human | `project.yaml.requirements.source ∈ {toishi, ...}` 時のみ発動。task 紐づき snapshot item の `approval_state` を Wave 1 着手前に確認: `approved` → proceed / `pending_approval`・`draft` → **自動 defer** (棟梁が「PdM 承認待ち」通知) / `rejected` → **human 必須** (差し戻し理由提示)。詳細 `toishi-integration.md` |
 | **G2 Wave gate 失敗** | auto-pass (retry→skip) | 既存。ただし skip は fail-closed 記録 (§2) |
 | **G3 escalation** (lint-repair 3 fail) | 軍師-adjudicated → critical なら human | 停止せず軍師に fix-or-defer 委譲 |
 | **G4 最終レビュー** | auto-pass | 既存 (失敗時 2 round 修正) |
@@ -23,7 +22,7 @@
 | **G6 context 20% pause** | 保護機構 (gate ではない) | 残す |
 | **G7 圧縮人間ゲート** (UI 自然さ、opt-in) | 状態駆動 → 高リスク差分のみ human | human-UI surface のみ。ConsistencyMatrix 人間必須 6 対 (H1 ブランド逸脱 / H2 情報優先度 / H3 例外画面違和感 / H4 コピー文言 / H5 導線 / H6 例外業務網羅、`contract-spine.md`) に**限定**。美意識全般は上げない。`変更リスク ∈ {cross-surface, contract-breaking}` or `失敗影響 ∈ {data-loss, security}` の差分のみ発火、それ以外は auto-pass |
 
-実質の停止点は **G1 と G3 の 2 つだけ** (外部要件 source 連携時のみ G1.5、human-UI surface のみ G7 が加わる)。機械判定可能な部分 (M1-M12) は全機械化し、人間は反証能力のない美意識でなく上記 6 対の**高リスク差分**にのみ呼ぶ (軍師: 圧縮人間ゲート)。それを軍師が裁定し、critical のみ人間に上げる。G1.5 は state-driven (軍師裁定不要) で、`requirements.source` が未設定 / `local` / `never` の project では完全 no-op (default 挙動に影響なし)。
+実質の停止点は **G1 と G3 の 2 つだけ** (human-UI surface のみ G7 が加わる)。機械判定可能な部分 (M1-M12) は全機械化し、人間は反証能力のない美意識でなく上記 6 対の**高リスク差分**にのみ呼ぶ (軍師: 圧縮人間ゲート)。それを軍師が裁定し、critical のみ人間に上げる。
 
 > **巡視 (junshi) ops の分類** (`../../junshi/`): 巡視の **発見記録 (discovered-{id}.md / backlog / `status: draft` の AC 提案) は `.takumi/` 限定 = ungated**。採取モードはここで完結し止まる。ただし **draft AC の active 化は contract-spine の add 規律 (`derived_from` + AC-coverage gate + M9) を通す** — 新 AC は将来の gate/scope/実装義務を変えるため ungated にしない (`../../junshi/graduation.md`)。**巡視発見の自動修正は通常の executor Wave gate (A-J) + 本書 human floor を必ず経由** (常駐ループ B-2、`autonomy.level` 準拠、`junshi.enforcement: autofix` 時のみ = pilot GO 後)。発見+記録 (discovery) 自体は `junshi.discovery: auto` で既定 ON・自己増殖するが advisory・`.takumi/`-only ゆえ無ゲート。趣き/摩擦オラクル由来は advisory ゆえ自動修正の対象にせず backlog 止まり。②走行は実アプリ駆動だが sandbox/in-memory/network-deny の containment 内 (`../../junshi/runtime.md`) で副作用 leak 時は即 reject = fail-closed。
 
@@ -109,7 +108,7 @@ human floor (G3/§2) や critical G1 で人間に手を止めて上げる時、*
 
 **自己診断**: 検証済も推奨も blocked_reason も書けない → それは停止すべきでないシグナル。検証して自分で決める。
 監査: 各停止は `autonomy-decision.jsonl` に `stop_kind: dossier|blocked|bare` を記録 (bare = 違反、telemetry-spec)。 <!-- RULE: stop-legality-audit T1:scripts/check-stop-legality.mjs -->
-**T1 deterministic 強制** (kernel §4 を script 化): `scripts/check-stop-legality.mjs` が `stop_kind=bare`・legal stop set `{G1,G1.5,G3,G6,G7}` 外の gate・不正 `blocked_reason`・confidence 欠落 dossier・`wave_boundary.asked_continue=true` を deterministic に fail (exit 1)。希薄化に負けず「無人なのに確認/裸 yes/no/続けますか?」を機構的に塞ぐ。seeded fixture: `scripts/__fixtures__/stop-legality/`。
+**T1 deterministic 強制** (kernel §4 を script 化): `scripts/check-stop-legality.mjs` が `stop_kind=bare`・legal stop set `{G1,G3,G6,G7}` 外の gate (退役した G1.5 は 2026-09-22 より前の ts を持つ過去記録に限り legacy 受理、それ以降は再混入として fail)・不正 `blocked_reason`・confidence 欠落 dossier・`wave_boundary.asked_continue=true` を deterministic に fail (exit 1)。希薄化に負けず「無人なのに確認/裸 yes/no/続けますか?」を機構的に塞ぐ。seeded fixture: `scripts/__fixtures__/stop-legality/`。
 
 ---
 

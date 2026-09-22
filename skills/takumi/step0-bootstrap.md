@@ -160,64 +160,6 @@ mode 解決の優先順位 / 状態遷移 / external silent 契約の詳細は `
 > [!IMPORTANT]
 > `backlog.mode` を auto-detect で上書きしない。explicit な project.yaml 値は最優先。auto-detect (existing `.takumi/backlog/` 等) は `mode == null` の時のみ動作。
 
-## project.yaml.requirements セクション (toishi 連携、Step 0_pre)
-
-Step 0_pre (外部要件 source 連携の auto-detect) で `ToishiGate.resolveMode()` が読む。初回 bootstrap 時、`project.yaml` に `requirements:` セクションが**無ければ**追加する (既存値は touch しない、idempotent、backlog 節と同パターン):
-
-```yaml
-# .takumi/project.yaml に追加 (既存セクションがあれば skip)
-requirements:
-  source: unset        # unset | toishi | local | never
-  toishi:
-    project_id: null   # mode == toishi 時のみ
-    last_snapshot_at: null
-```
-
-bootstrap snippet (bash + sed のみ、idempotent、backlog 方式踏襲):
-
-```bash
-test -f .takumi/project.yaml || touch .takumi/project.yaml
-if ! grep -qE '^requirements:' .takumi/project.yaml; then
-  printf '\nrequirements:\n  source: unset\n  toishi:\n    project_id: null\n    last_snapshot_at: null\n' >> .takumi/project.yaml
-fi
-```
-
-### Step 0_pre detection (auto-detect)
-
-`project.yaml.requirements.source` が `unset` の時のみ実行。**2 signals に限定** (ENV `TOISHI_API_KEY` は CI 偶発検出 + non-TTY hang リスクのため signal にしない):
-
-```bash
-# 既に explicit なら skip (auto-detect は explicit を上書きしない)
-source=$(grep -E '^  source:' .takumi/project.yaml | awk '{print $2}')
-if [ "$source" != "unset" ] && [ -n "$source" ]; then
-  return 0   # 確定済、何もしない
-fi
-
-# Signal 1+2: .mcp.json / .cursor/mcp.json で toishi を含む server 定義
-detected=false
-if [ -f .mcp.json ] && grep -qi 'toishi' .mcp.json 2>/dev/null; then detected=true; fi
-if [ -f .cursor/mcp.json ] && grep -qi 'toishi' .cursor/mcp.json 2>/dev/null; then detected=true; fi
-
-if [ "$detected" != true ]; then
-  return 0   # 完全未検出 = 完全 silent (toishi-less ユーザーへ侵襲ゼロ)
-fi
-
-# 検出済 + interactive TTY のみ 1-time confirm 発火
-if [ ! -t 0 ]; then
-  return 0   # 非 TTY (CI / pipe) は silent skip、unset のまま残す
-fi
-
-# ここから先は toishi-integration.md の §`ToishiGate.resolveMode()` + §1-time confirm UX に委譲
-# 棟梁が user に y/n/never を提示し、回答を sed で source: に書き戻す
-```
-
-> [!IMPORTANT]
-> 全 step が **silent on negative** (未検出時 echo / printf / log なし、return 0)。toishi-less project でこの bootstrap が走っても user は何も気づかない。
->
-> auto-detect は explicit を**上書きしない** (backlog と同原則)。explicit な `project.yaml.requirements.source` 値は最優先。
-
-mode 解決の優先順位 / 3 状態の遷移 / `ToishiGate.shouldFetch(stage)` 中央化 / G1.5 gate / silent degrade 詳細は `toishi-integration.md` 参照。
-
 ## 他言語プロジェクトでの補足
 
 Stryker 非対応言語 (Python, Go) は `.gitignore` の `stryker.tick*.config.mjs` / `vitest.stryker-*.config.ts` / `.stryker-tmp/` 行は不要だが、害にもならないため残してよい。代わりに以下を追加:

@@ -17,7 +17,16 @@ const dir = process.argv[2] || '.takumi/telemetry'
 
 // 人間に手を止めて上げてよい legal stop gate (autonomy.md §2/§3、telemetry-spec 3.9)。
 // G2 は gate 失敗 skip であって人間停止でない → ここに含めない (含めると illegal stop を見逃す)。
-const LEGAL_STOP_GATES = new Set(['G1', 'G1.5', 'G3', 'G6', 'G7'])
+const LEGAL_STOP_GATES = new Set(['G1', 'G3', 'G6', 'G7'])
+// G1.5 (外部要件 source 承認 check) は v3.0.0 で退役。過去 telemetry の互換のため、cutoff より前の ts を持つ
+// 記録に限り legacy input として legal 扱いにする。cutoff 以降の G1.5 は「退役 gate の再混入」として fail。
+const RETIRED_STOP_GATES = new Map([['G1.5', '2026-09-22T00:00:00Z']])
+function isLegacyLegalGate(o) {
+  const cutoff = RETIRED_STOP_GATES.get(String(o.gate))
+  if (cutoff == null) return false
+  const ts = typeof o.ts === 'string' ? Date.parse(o.ts) : NaN
+  return Number.isFinite(ts) && ts < Date.parse(cutoff)
+}
 const LEGAL_STOP_KINDS = new Set(['dossier', 'blocked', 'none'])      // bare = 違反
 const LEGAL_BLOCKED_REASONS = new Set(['missing_capability', 'missing_input', 'missing_authority'])
 
@@ -44,7 +53,7 @@ function auditAutonomy(o, loc, errs) {
   if (o.stop_kind === 'bare')
     errs.push(`${loc}: stop_kind=bare (裸の yes/no = 責任逃れ、決裁ドシエ必須)`)
   // 2. illegal stop gate = 「無人なのに確認」accident (kernel §1: 停止点は 3 つだけ)
-  if (o.gate != null && !LEGAL_STOP_GATES.has(String(o.gate)))
+  if (o.gate != null && !LEGAL_STOP_GATES.has(String(o.gate)) && !isLegacyLegalGate(o))
     errs.push(`${loc}: gate="${o.gate}" は legal stop set 外 (${[...LEGAL_STOP_GATES].join('/')}) = 無人なのに確認`)
   // 3. blocked なら blocked_reason が legal set
   if (o.stop_kind === 'blocked' && !LEGAL_BLOCKED_REASONS.has(String(o.blocked_reason)))

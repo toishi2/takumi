@@ -419,6 +419,11 @@ gh skill uninstall takumi
 > gh skill install toishi2/takumi
 > ```
 
+> [!NOTE]
+> **toishi 連携をお使いだった方へ** — 要件定義 SaaS toishi のサービス終了に伴い、v3.0.0 で外部要件 source 連携 (旧 `toishi-integration.md`、G1.5 gate) を撤去しました。
+> `.takumi/project.yaml` の `requirements:` セクションは読まれなくなり、残っていても無害です。`.takumi/adapters/` の adapter、`.takumi/agreements/` の snapshot、specs frontmatter の `*_acceptance_check_id` / `*_snapshot_id` は手動で削除して構いません。
+> Core 内の AC 起草と design mode 自体は従来どおり内部生成で継続します。廃止されるのは外部 SaaS との要件同期 (snapshot 取り込み・adapter 由来の Given/When/Then 分解) と承認状態による着手 gate です。
+
 ---
 
 ## 実際に話しかけてみましょう
@@ -816,7 +821,7 @@ takumi はこの GitHub リポジトリで公開している **Core Edition** (M
 |  | takumi Core (無料 / OSS) | **Tsugite (商用版・提供中)** |
 |---|---|---|
 | 実装・テスト・レビュー | ○ | ○ (**同じ入口・同じ設計思想**) |
-| **要件定義から伴走** | — | **○ 曖昧な依頼を仕様に固めてから着工** (toishi の要件定義プロセスを同梱) |
+| **要件定義から伴走** | — | **○ 曖昧な依頼を仕様に固めてから着工** (要件定義プロセスを同梱) |
 | **実行基盤の規約化** | — | ○ 既定・禁止・値札・承認要否を宣言し、実基盤へ適用する工程 |
 | **既存システムの作り替え・移植** | — | ○ 動いている実物を仕様として扱う工程、別基盤への移植 |
 | **出す前の指差し** | — | ○ リリース直前に「出してよいか」を確認する工程 |
